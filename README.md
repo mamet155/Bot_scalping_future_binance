@@ -215,11 +215,3 @@ Bukan buat jamin cuan, tapi alat bantu biar trading lebih disiplin.
 
 
 ---
-
-Kalau mau, gue juga bisa bikinin:
-
-Versi README super singkat (½ halaman)
-
-Versi README jualan buat share ke grup
-
-Template post Telegram / WA buat promosi bot 😎
