@@ -1,13 +1,11 @@
-Gas. Ini README final versi rapi, ringkas, dan siap kamu upload ke repo 👇
-Tinggal copy–paste ke README.md.
 
 
 ---
 
 Bot_scalping_future_binance
 
-Bot scalping otomatis untuk Binance Futures (support DEMO / TESTNET & REAL).
-Cocok buat yang mau coba trading pakai bot dari nol sampai jalan.
+Bot scalping otomatis untuk Binance Futures (support DEMO/TESTNET & REAL).
+Fokus: risk control + trailing pintar biar profit gak balik nol.
 
 
 ---
@@ -16,22 +14,25 @@ Cocok buat yang mau coba trading pakai bot dari nol sampai jalan.
 
 Auto open posisi BUY / SELL
 
-Support Isolated Margin
+Isolated margin
 
-Stop Loss otomatis tiap open posisi
+Stop Loss otomatis (exchange-side) saat posisi dibuka
 
-Trailing Profit (kunci profit kalau harga balik)
+Trailing profit pintar
 
-Risk control
+Trailing baru aktif jika profit ≥ 10% dari margin
 
-Bot stop kalau drawdown > 80%
-
-Bot close semua posisi kalau mati
+Posisi close jika profit turun 20% dari puncak
 
 
-Notifikasi Telegram
+Safety
 
-Alert kalau profit tembus 50% balance awal
+Bot stop kalau balance turun 80% (MAX_DD_BALANCE)
+
+Profit alert kalau balance naik +50%
+
+
+Notifikasi Telegram (open, close, alert)
 
 
 
@@ -43,25 +44,24 @@ main.py      -> logic utama bot
 api.py       -> koneksi ke Binance  
 config.py    -> setting bot & API  
 mode.py      -> pilih DEMO / REAL  
-notifier.py  -> kirim notif ke Telegram
+notifier.py  -> kirim notif Telegram
 
 
 ---
 
 🚀 Cara Pakai (Dari Nol)
 
-1️⃣ Install Termux + Python
+1️⃣ Install di Termux
 
 pkg update
-pkg install python -y
-pkg install git -y
+pkg install python git -y
 
 2️⃣ Clone repo
 
 git clone https://github.com/mamet155/Bot_scalping_future_binance.git
 cd Bot_scalping_future_binance
 
-3️⃣ Install library
+3️⃣ Install dependency
 
 pip install requests
 
@@ -70,16 +70,13 @@ pip install requests
 
 🔑 Setup API Binance
 
-1. Login Binance
+1. Login Binance → API Management
 
 
-2. Buka API Management
+2. Buat API Key
 
 
-3. Buat API Key
-
-
-4. Aktifkan:
+3. Aktifkan:
 
 Futures
 
@@ -87,7 +84,7 @@ Enable Trading
 
 
 
-5. Simpan:
+4. Simpan:
 
 API_KEY
 
@@ -104,13 +101,10 @@ API_SECRET
 1. Buka Telegram → cari @BotFather
 
 
-2. /start → /newbot
+2. /start → /newbot → copy TOKEN
 
 
-3. Copy TOKEN BOT
-
-
-4. Cari @userinfobot → ambil CHAT_ID
+3. Cari @userinfobot → ambil CHAT_ID
 
 
 
@@ -119,37 +113,41 @@ API_SECRET
 
 ⚙️ Edit config.py
 
-Buka file:
+Buka:
 
 nano config.py
 
-Isi bagian ini:
+Isi contoh (sesuaikan punyamu):
 
 # ===== API BINANCE =====
 API_KEY = "ISI_API_KEY_KAMU"
 API_SECRET = "ISI_API_SECRET_KAMU"
 
-# ===== TELEGRAM =====
-TG_TOKEN = "ISI_TOKEN_BOT_TELE"
-TG_CHAT_ID = "ISI_CHAT_ID_KAMU"
-
-# ===== MODE =====
-# DEMO = testnet, REAL = akun asli
-MODE = "DEMO"
-
-# ===== BOT SETTING =====
+# ===== PAIR =====
 SYMBOLS = ["BTCUSDT", "ETHUSDT"]
 
-LEVERAGE = 10
-MARGIN_PER_TRADE = 0.5   # USD per posisi
+# ===== SETUP =====
+LEVERAGE = 100
+MARGIN_PER_TRADE = 0.5
 
-STOP_LOSS_PCT = -0.20        # -20% dari margin
-TRAILING_PROFIT_PCT = 0.20  # trailing 20% dari profit puncak
+# ===== STOP LOSS =====
+STOP_LOSS_PCT = -0.20
 
-MAX_DD_BALANCE = -0.80      # stop bot kalau balance turun 80%
-PROFIT_ALERT_PCT = 0.50     # notif kalau profit +50%
+# ===== TRAILING =====
+TRAILING_START_PCT = 0.10   # trailing aktif jika profit >= 10% margin
+TRAILING_DROP_PCT  = 0.20   # close jika profit turun 20% dari puncak
 
-CHECK_INTERVAL = 3          # detik
+# ===== SAFETY =====
+MAX_DD_BALANCE = -0.80      # bot stop kalau balance -80%
+PROFIT_ALERT_PCT = 0.50    # alert kalau profit +50%
+
+# ===== LOOP =====
+CHECK_INTERVAL = 3
+
+# ===== TELEGRAM =====
+TELEGRAM_ON = True
+BOT_TOKEN = "ISI_BOT_TOKEN"
+CHAT_ID = "ISI_CHAT_ID"
 
 Simpan:
 
@@ -162,23 +160,15 @@ CTRL + O → Enter → CTRL + X
 
 python main.py
 
-Kalau sukses, bakal muncul:
-
-BOT START - MODE DEMO
-BALANCE: xxxx USDT
-
 
 ---
 
-🛑 Cara Stop & Hapus Bot Lama
+🛑 Stop & Bersih-bersih
 
-Stop bot
+Stop bot: CTRL + C
 
-Tekan:
+Hapus folder bot:
 
-CTRL + C
-
-Hapus bot lama
 
 cd ~
 rm -rf Bot_scalping_future_binance
@@ -188,30 +178,12 @@ rm -rf Bot_scalping_future_binance
 
 ⚠️ Catatan Penting
 
-WAJIB test di DEMO dulu
+Test di DEMO dulu sebelum ke REAL.
 
-Jangan langsung pakai real kalau belum paham
+Bot ini agresif → risiko tinggi.
 
-Bot ini scalping agresif, risiko tinggi
+Semua keputusan trading tetap tanggung jawab user.
 
-Semua keputusan trading tanggung jawab user
-
-
-
----
-
-🧠 Ringkasannya
-
-Bot ini dibuat buat:
-
-Latihan trading automation
-
-Testing strategi scalping
-
-Belajar risk management pakai bot
-
-
-Bukan buat jamin cuan, tapi alat bantu biar trading lebih disiplin.
 
 
 ---
